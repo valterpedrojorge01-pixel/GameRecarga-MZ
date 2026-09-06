@@ -1,0 +1,9 @@
+name = "gamerecarga-mz-api"
+main = "cloudflare-worker.js"
+compatibility_date = "2026-09-06"
+
+[vars]
+ALLOWED_ORIGIN = "https://valterpedrojorge01-pixel.github.io"
+
+[secrets]
+required = ["NETSHOP_API_KEY"]
