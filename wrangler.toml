@@ -1,4 +1,4 @@
-name = "gamerecarga-mz-api"
+name = "gamerecarga-mz"
 main = "cloudflare-worker.js"
 compatibility_date = "2026-09-06"
 
