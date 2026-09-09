@@ -25,9 +25,19 @@ function uuid() { return crypto.randomUUID(); }
 export default {
   async fetch(request, env) {
     const allowedOrigin = env.ALLOWED_ORIGIN || '*';
+    const url = new URL(request.url);
+
     if (request.method === 'OPTIONS') return json({}, 204, allowedOrigin);
 
-    const url = new URL(request.url);
+    if (request.method === 'GET' && (url.pathname === '/' || url.pathname === '/health')) {
+      return json({
+        ok: true,
+        service: 'GameRecarga MZ API',
+        configured: Boolean(env.NETSHOP_API_KEY),
+        endpoint: '/create-order'
+      }, 200, allowedOrigin);
+    }
+
     if (!env.NETSHOP_API_KEY) return json({ error: 'server_not_configured' }, 500, allowedOrigin);
 
     if (request.method === 'POST' && url.pathname === '/create-order') {
@@ -60,6 +70,6 @@ export default {
       return json({ ok: response.ok, status: response.status, data }, response.ok ? 200 : 502, allowedOrigin);
     }
 
-    return json({ error: 'not_found' }, 404, allowedOrigin);
+    return json({ error: 'not_found', method: request.method, path: url.pathname }, 404, allowedOrigin);
   }
 };
