@@ -7,6 +7,8 @@ const games=[
   {name:'Roblox',mark:'RBX',image:'assets/roblox.svg',packs:[['80 Robux',85],['400 Robux',390],['800 Robux',720],['1700 Robux',1450]]},
   {name:'EA FC Mobile',mark:'FC',image:'assets/ea-fc-mobile.svg',packs:[['100 FC Points',95],['520 FC Points',450],['1050 FC Points',850],['2200 FC Points',1690]]}
 ];
+const params=new URLSearchParams(location.search);
+if(params.get('teste')==='10') games.unshift({name:'TESTE DE PAGAMENTO',mark:'TEST',image:'assets/free-fire.svg',packs:[['Cobrança de teste',10]]});
 const money=n=>new Intl.NumberFormat('pt-MZ').format(n)+' MT';
 const grid=document.querySelector('#grid');
 function render(list){grid.innerHTML=list.map(g=>`<article class="game"><div class="game-cover"><img src="${g.image}" alt="${g.name}" loading="lazy"><span>${g.mark}</span></div><div class="game-body"><h3>${g.name}</h3><p>Pacotes disponíveis</p><div class="packs">${g.packs.map(p=>`<button class="pack" title="${g.name} — ${p[0]}" onclick="openCheckout('${g.name.replace(/'/g,"\\'")}','${p[0].replace(/'/g,"\\'")}',${p[1]})">${p[0]}<b>${money(p[1])}</b></button>`).join('')}</div><button class="buy" onclick="openCheckout('${g.name.replace(/'/g,"\\'")}','${g.packs[0][0].replace(/'/g,"\\'")}',${g.packs[0][1]})">Comprar agora</button></div></article>`).join('')}
