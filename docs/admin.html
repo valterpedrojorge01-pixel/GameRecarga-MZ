@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-MZ">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GameRecarga MZ — Administração</title>
+  <link rel="stylesheet" href="admin.css?v=1">
+</head>
+<body>
+  <header class="topbar">
+    <a href="./" class="brand"><span>GR</span><strong>GAMERECARGA <i>MZ</i></strong></a>
+    <div class="top-actions"><button id="refresh">Atualizar</button><a href="./">Voltar à loja</a></div>
+  </header>
+  <main class="admin-shell">
+    <section class="intro"><div><div class="eyebrow">ADMINISTRAÇÃO</div><h1>Painel da loja</h1><p>Acompanhe pedidos e pagamentos em tempo real.</p></div><div id="lastUpdate" class="muted">—</div></section>
+    <section class="stats" id="stats"></section>
+    <section class="panel"><div class="panel-head"><div><h2>Pedidos recentes</h2><p>Pagamentos pendentes, confirmados e falhados.</p></div><div class="filters"><input id="search" placeholder="Pesquisar por ID, jogador ou jogo"><select id="status"><option value="">Todos os estados</option><option value="Pagamento confirmado">Pagos</option><option value="Pagamento pendente">Pendentes</option><option value="Pagamento falhou">Falhados</option></select></div></div><div id="orders" class="orders"><div class="empty">A carregar...</div></div></section>
+  </main>
+  <script src="admin.js?v=1"></script>
+</body>
+</html>
