@@ -1,25 +1,45 @@
 # Backend seguro — GameRecarga MZ
 
-Este diretório prepara o backend público necessário para o checkout direto da loja.
+Arquitetura:
 
-## Arquitetura
+`GitHub Pages (frontend) -> Cloudflare Worker -> NetShop`
 
-`GitHub Pages (frontend) -> API segura -> NetShop -> M-Pesa/mKesh/cartões`
+O histórico de pedidos e pagamentos será persistido em **Cloudflare D1**. O KV não é necessário para esta arquitetura.
 
-A chave `NETSHOP_API_KEY` **não deve ser colocada neste repositório nem no JavaScript do frontend**. O GitHub Pages publica HTML, CSS e JavaScript estáticos; o backend deve ser hospedado separadamente.
+## D1
 
-## Endpoints previstos
+O esquema está em `api/schema.sql` e cria as tabelas `orders` e `payments`, com índices para estado, data, referência e ID do pagamento.
 
-- `POST /create-order` — cria uma cobrança NetShop e devolve o estado inicial/página de pagamento quando disponível.
-- `GET /orders/:id` — consulta o estado de uma encomenda.
-- `POST /webhook` — recebe atualizações da NetShop.
+Depois de criar a base D1 no Cloudflare, aplicar:
 
-## Variáveis secretas
+```bash
+npx wrangler d1 execute gamerecarga-mz-db --remote --file=api/schema.sql
+```
 
-- `NETSHOP_API_KEY`
+E adicionar ao `api/wrangler.toml` uma binding com o ID real da base:
 
-## Próximo passo de implantação
+```toml
+[[d1_databases]]
+binding = "DB"
+database_name = "gamerecarga-mz-db"
+database_id = "COLOCA_AQUI_O_D1_DATABASE_ID"
+```
 
-Hospedar `api/cloudflare-worker.js` (ou equivalente) em um runtime serverless e configurar `NETSHOP_API_KEY` como segredo do provedor. Depois, definir a URL pública da API no frontend.
+## Secrets
 
-Nunca commitar a chave real da NetShop.
+Configurar no Worker:
+
+- `NETSHOP_API_KEY` — chave privada da NetShop.
+- `NETSHOP_WEBHOOK_SECRET` — segredo usado para validar os webhooks da NetShop.
+- `ADMIN_KEY` — chave privada para proteger o painel administrativo.
+
+Nunca colocar esses valores no HTML, JavaScript público ou GitHub.
+
+## Fluxo
+
+1. O cliente cria o pedido.
+2. O Worker cria a cobrança na NetShop.
+3. O pedido é gravado no D1 como `Pagamento pendente`.
+4. A NetShop envia o webhook.
+5. O Worker valida a assinatura e atualiza `payment_status`, `status` e `delivery_status`.
+6. O painel administrativo consulta o D1 e apresenta pedidos, pagamentos, falhas e receita.
