@@ -8,6 +8,8 @@ ALLOWED_ORIGIN = "https://valterpedrojorge01-pixel.github.io"
 [secrets]
 required = ["NETSHOP_API_KEY", "NETSHOP_WEBHOOK_SECRET", "ADMIN_KEY"]
 
-[[kv_namespaces]]
+[[d1_databases]]
 binding = "DB"
-id = "REPLACE_WITH_CLOUDFLARE_KV_NAMESPACE_ID"
+database_name = "gamerecarga-mz-db"
+database_id = "1ff76b25-9aeb-437e-b705-e109ac56e73e"
+migrations_dir = "migrations"
