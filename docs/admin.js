@@ -2,10 +2,13 @@ const API = 'https://gamerecarga-mz.valterpedrojorge01.workers.dev';
 const money = n => new Intl.NumberFormat('pt-MZ').format(Number(n || 0)) + ' MT';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let allOrders = [];
+let adminKey = sessionStorage.getItem('gamerecarga_admin_key') || '';
+function ensureAdminKey(){ if(adminKey) return adminKey; adminKey=prompt('Introduza a ADMIN_KEY do GameRecarga MZ:')||''; if(adminKey) sessionStorage.setItem('gamerecarga_admin_key',adminKey); return adminKey; }
 
 async function api(path) {
-  const res = await fetch(`${API}${path}`, { headers: { Accept: 'application/json' } });
+  const res = await fetch(`${API}${path}`, { headers: { Accept: 'application/json', 'X-Admin-Key': ensureAdminKey() } });
   const data = await res.json().catch(() => ({}));
+  if (res.status === 401) { sessionStorage.removeItem('gamerecarga_admin_key'); adminKey=''; throw new Error('ADMIN_KEY inválida'); }
   if (!res.ok || data?.error) throw new Error(data?.error || `HTTP ${res.status}`);
   return data;
 }
