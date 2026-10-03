@@ -1,3 +1,4 @@
+// Deployment sync: ensure latest Worker source is redeployed.
 const NETSHOP_BASE='https://www.netshop.co.mz/api/v1';
 const WALLET_IDS={mpesa:'574418',mkesh:'247460',bim:'767755',bci:'111895'};
 
