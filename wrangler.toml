@@ -1,7 +1,12 @@
 name = "gamerecarga-mz"
-main = "cloudflare-worker.js"
+main = "api/cloudflare-worker.js"
 compatibility_date = "2026-09-06"
 workers_dev = true
 
 [vars]
 ALLOWED_ORIGIN = "https://valterpedrojorge01-pixel.github.io"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "gamerecarga-mz-db"
+database_id = "1ff76b25-9aeb-437e-b705-e109ac56e73e"
